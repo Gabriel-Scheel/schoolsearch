@@ -78,7 +78,6 @@ class theme
 			if (strpos($mbFile, 'php') !== false)
 			{
 				$metaBoxes = array_merge($metaBoxes, require_once($this->baseDir.'/configs/metaboxes/'.$mbFile));
-				var_dump($metaBoxes);
 			}
 		}
 		return $metaBoxes;
