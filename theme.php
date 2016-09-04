@@ -16,6 +16,8 @@ class theme
 
 		add_filter( 'rwmb_meta_boxes', array($this, 'loadMetaBoxes') );
 
+		add_action('wp_ajax_score_search', array($this,'score_search'));
+
 	}
 
 
@@ -70,6 +72,7 @@ class theme
 
 	function loadMetaBoxes()
 	{
+
 		$metaBoxFiles = scandir($this->baseDir.'/configs/metaboxes/');
 		$metaBoxes = array();
 
@@ -80,8 +83,56 @@ class theme
 				$metaBoxes = array_merge($metaBoxes, require_once($this->baseDir.'/configs/metaboxes/'.$mbFile));
 			}
 		}
+
 		return $metaBoxes;
+
 	}
+
+
+	//Get schools that the person could apply for.
+	function score_search() {
+		
+		$score = 0;
+
+		//If we don't have a score or we got passed bad data,
+		//fail out with an empty set.
+		if ($_GET['score'] != null)
+		{
+			$score = $_GET['score'];
+			if (is_numeric($score) == false)
+			{
+				echo '{}';
+				die();
+			}
+		}
+
+
+
+		//Schools that the score is good enough for.
+		$args = array(
+			'post_type' => 'Schools',
+			'posts_per_page' => '-1',
+			'meta_key' => 'schools_score_min',
+			'meta_query' => array(
+				array(
+					'key' => 'schools_score_min',
+					'value' => $score,
+					'compare' => '<='
+				)
+			),
+			'orderby' => 'schools_score_min',
+			'order' => 'ASC'
+		);
+
+		$schools = new WP_Query($args);
+		$schools = $schools->get_posts();
+
+		//Dump em out.
+		echo json_encode($schools);
+		die();
+
+	}
+
 
 }
 
