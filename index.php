@@ -1,7 +1,8 @@
 
 <html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<?php wp_head(); ?>
+
 <script type="text/javascript">
 	var globals = {};
 	globals.ajaxUrl = '<?php echo admin_url('admin-ajax.php');?>';

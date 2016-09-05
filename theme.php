@@ -7,17 +7,18 @@ class theme
 
 	function __construct()
 	{
-		$this->baseDir = get_template_directory();
+		$this->baseDir = get_template_directory_uri();
 
 
 		$this->registerPostTypes();
 		$this->includeModules();
 
 
+
 		add_filter( 'rwmb_meta_boxes', array($this, 'loadMetaBoxes') );
 
 		add_action('wp_ajax_score_search', array($this,'score_search'));
-
+		add_action('wp_enqueue_scripts', array($this, 'getScripts'));
 	}
 
 
@@ -132,6 +133,13 @@ class theme
 		die();
 
 	}
+
+	function getScripts()
+	{
+		wp_enqueue_script( 'jQuery', $this->baseDir.'/assets/js/jquery.min.js');
+	}
+
+	
 
 
 }
